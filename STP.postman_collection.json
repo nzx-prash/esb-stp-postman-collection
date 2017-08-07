@@ -1,0 +1,2050 @@
+{
+	"variables": [],
+	"info": {
+		"name": "STP",
+		"_postman_id": "8f7130d4-00bb-7741-7297-c40b220483da",
+		"description": "Test Suite to validate STP services developed using ESB Copper Camel to replace JBoss for Redcurrent Project.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "0. Sanity",
+			"description": "This test suite does a Sanity check and runs everytime a new build is deployed.",
+			"item": [
+				{
+					"name": "Sanity - POST request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_post_default();\r",
+									"stp_test_post_schema_without_errors();\r",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:8080/esb-stp/rest/v1/participant/orders/upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"description": "",
+									"key": "order-type",
+									"type": "text",
+									"value": "OFFER"
+								},
+								{
+									"description": "",
+									"key": "filename",
+									"type": "file",
+									"src": "OFFER.csv"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Sanity - GET request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_get_default();\r",
+									"stp_test_get_schema_without_errors();"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/{{tmp_upload_id}}",
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "1. GET",
+			"description": "",
+			"item": [
+				{
+					"name": "GET request with valid details.",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_get_default();\r",
+									"stp_test_get_schema_without_errors();"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:8080//esb-stp/rest/v1/participant/orders/{{tmp_upload_id}}",
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": "This test does a positive testing of GET request for STP"
+					},
+					"response": []
+				},
+				{
+					"name": "GET request that returns a response with Upload Errors",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_get_default();\r",
+									"stp_test_get_schema_with_errors();"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:8080//esb-stp/rest/v1/participant/orders/2668",
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": "This test does a positive testing of GET request for STP"
+					},
+					"response": []
+				},
+				{
+					"name": "GET request without Authorization",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);",
+									"",
+									"stp_test_common_response_http401();",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:8080//esb-stp/rest/v1/participant/orders/2452",
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": "This test verifies the requirement for authorization"
+					},
+					"response": []
+				},
+				{
+					"name": "GET request without Upload Id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"console.log (\"ESBCC-37 start\")\r",
+									"stp_test_get_default();\r",
+									"stp_test_get_schema_with_errors();\r",
+									"console.log (\"ESBCC-37 end\")"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:8080//esb-stp/rest/v1/participant/orders/",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": "REquest is sent without Upload Id"
+					},
+					"response": []
+				},
+				{
+					"name": "GET request that returns  - HTTP404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_common_response_http404();\r",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:8080//esb-stp/rest/v1/participant/orders/5000",
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": "Request is sent with Invalid Upload Id\n\nExpected : HTTP404 with message Not Found."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2. POST",
+			"description": "",
+			"item": [
+				{
+					"name": "POST request with all valid details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_post_default();\r",
+									"stp_test_post_status_success_as_0();\r",
+									"stp_test_post_schema_without_errors();\r",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:8080/esb-stp/rest/v1/participant/orders/upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"description": "",
+									"key": "order-type",
+									"type": "text",
+									"value": "DCLSBID"
+								},
+								{
+									"description": "",
+									"key": "filename",
+									"type": "file",
+									"src": "DCLSBID.csv"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST request without OrderType",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);",
+									"",
+									"stp_test_common_response_http400();",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:8080/esb-stp/rest/v1/participant/orders/upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"description": "",
+									"key": "filename",
+									"type": "file",
+									"src": "OFFER.csv"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST request without Username",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);",
+									"",
+									"stp_test_common_response_http401();"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:8080/esb-stp/rest/v1/participant/orders/upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "order-type",
+									"value": "",
+									"description": "",
+									"type": "file"
+								}
+							]
+						},
+						"description": "This is Post request sent without Username"
+					},
+					"response": []
+				},
+				{
+					"name": "POST request without Password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);",
+									"",
+									"stp_test_common_response_http401();"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}\\upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "abcd.xyz@nzx.com",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "order-type",
+									"value": "",
+									"description": "",
+									"type": "file"
+								}
+							]
+						},
+						"description": "This is Post request sent without Username"
+					},
+					"response": []
+				},
+				{
+					"name": "POST request without Token - returns HTTP401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"//Load Postman BDD",
+									"eval(globals.stp_default_tests);",
+									"",
+									"stp_test_common_response_http401()"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:8080/esb-stp/rest/v1/participant/orders/upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "order-type",
+									"value": "",
+									"description": "",
+									"type": "file"
+								}
+							]
+						},
+						"description": "This is POST request without token"
+					},
+					"response": []
+				},
+				{
+					"name": "POST request without File - returns HTTP400",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);",
+									"",
+									"stp_test_common_response_http400();",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:8080/esb-stp/rest/v1/participant/orders/upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "order_type",
+									"value": "",
+									"description": "",
+									"type": "file"
+								},
+								{
+									"key": "filename",
+									"value": "Offer",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"description": "This POST request is sent with all valid details except the attachment of file. This is to ensure that external service should be handling/receiving valid error if request is sent without file."
+					},
+					"response": []
+				},
+				{
+					"name": "POST request with Multiline data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_post_default();\r",
+									"stp_test_post_status_success_as_0()\r",
+									"stp_test_post_schema_with_errors();"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:8080/esb-stp/rest/v1/participant/orders/upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"description": "",
+									"key": "order-type",
+									"type": "text",
+									"value": "BID"
+								},
+								{
+									"description": "",
+									"key": "filename",
+									"type": "file",
+									"value": ""
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST request with Invalid Username - returns HTTP403",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);",
+									"",
+									"stp_test_common_response_http403();"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:8080/esb-stp/rest/v1/participant/orders/upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "abcd.xyz@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "order-type",
+									"value": "",
+									"description": "",
+									"type": "file"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST request with Invalid Password - returns HTTP403",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);",
+									"",
+									"stp_test_common_response_http403();"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:8080/esb-stp/rest/v1/participant/orders/upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testinginvalid",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "order-type",
+									"value": "",
+									"description": "",
+									"type": "file"
+								}
+							]
+						},
+						"description": "This is Post request sent without Password\n\nExpected : HTTP403 - Forbidden."
+					},
+					"response": []
+				},
+				{
+					"name": "POST request with Huge File",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_post_default();\r",
+									"stp_test_post_status_success_as_0()\r",
+									"stp_test_post_schema_without_errors();\r",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:8080/esb-stp/rest/v1/participant/orders/upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"description": "",
+									"key": "order-type",
+									"type": "text",
+									"value": "BID"
+								},
+								{
+									"description": "",
+									"key": "filename",
+									"type": "file",
+									"value": ""
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST request with Empty File",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_post_default();\r",
+									"stp_test_post_status_empty_as_2();\r",
+									"stp_test_post_schema_without_errors();\r",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:8080/esb-stp/rest/v1/participant/orders/upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"description": "",
+									"key": "order-type",
+									"type": "text",
+									"value": "BID"
+								},
+								{
+									"description": "",
+									"key": "filename",
+									"type": "file",
+									"src": "Test-Empty.csv"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST request with Invalid Format",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_post_default();\r",
+									"stp_test_post_status_system_error_as_1();\r",
+									"stp_test_post_schema_with_errors();\r",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:8080/esb-stp/rest/v1/participant/orders/upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"description": "",
+									"key": "order-type",
+									"type": "text",
+									"value": "BID"
+								},
+								{
+									"description": "",
+									"key": "filename",
+									"type": "file",
+									"src": "Test-Invalid-Format.csv"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST request with Multiple GXP",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_post_default();\r",
+									"stp_test_post_status_success_as_0();\r",
+									"stp_test_post_schema_with_errors();\r",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:8080/esb-stp/rest/v1/participant/orders/upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"description": "",
+									"key": "order-type",
+									"type": "text",
+									"value": "BID"
+								},
+								{
+									"description": "",
+									"key": "filename",
+									"type": "file",
+									"src": "Test-BID-MultipleGXP-1TP.csv"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST request with Invalid FileFormat",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_post_default();\r",
+									"stp_test_post_status_system_error_as_1();\r",
+									"stp_test_post_schema_with_errors();\r",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:8080/esb-stp/rest/v1/participant/orders/upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"description": "",
+									"key": "order-type",
+									"type": "text",
+									"value": "BID"
+								},
+								{
+									"description": "",
+									"key": "filename",
+									"type": "file",
+									"value": ""
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST request with Passive Trader",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_post_default();\r",
+									"stp_test_post_schema_without_errors();\r",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:8080/esb-stp/rest/v1/participant/orders/upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "amytaylor.mercury@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"description": "",
+									"key": "order-type",
+									"type": "text",
+									"value": "BID"
+								},
+								{
+									"description": "",
+									"key": "filename",
+									"type": "file",
+									"value": ""
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST Request with discard file = Y",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_post_default();\r",
+									"stp_test_post_status_success_as_0();\r",
+									"stp_test_post_schema_without_errors();\r",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:8080/esb-stp/rest/v1/participant/orders/upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"description": "",
+									"key": "order-type",
+									"type": "text",
+									"value": "BID"
+								},
+								{
+									"description": "",
+									"key": "filename",
+									"type": "file",
+									"src": "BID2.csv"
+								},
+								{
+									"key": "discard-file",
+									"value": "Y",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST Request with discard-qty = Y",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_post_default();\r",
+									"stp_test_post_status_success_as_0();\r",
+									"stp_test_post_schema_without_errors();\r",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:8080/esb-stp/rest/v1/participant/orders/upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"description": "",
+									"key": "order-type",
+									"type": "text",
+									"value": "BID"
+								},
+								{
+									"description": "",
+									"key": "filename",
+									"type": "file",
+									"src": "BID2.csv"
+								},
+								{
+									"key": "discard-qty",
+									"value": "Y",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST Request with allow-price = Y",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_post_default();\r",
+									"stp_test_post_status_success_as_0();\r",
+									"stp_test_post_schema_without_errors();\r",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:8080/esb-stp/rest/v1/participant/orders/upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"description": "",
+									"key": "order-type",
+									"type": "text",
+									"value": "BID"
+								},
+								{
+									"description": "",
+									"key": "filename",
+									"type": "file",
+									"src": "BID2.csv"
+								},
+								{
+									"key": "allow-price",
+									"value": "Y",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST Request with compliance-reason  = Y",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_post_default();\r",
+									"stp_test_post_status_success_as_0();\r",
+									"stp_test_post_schema_without_errors();\r",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:8080/esb-stp/rest/v1/participant/orders/upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"description": "",
+									"key": "order-type",
+									"type": "text",
+									"value": "BID"
+								},
+								{
+									"description": "",
+									"key": "filename",
+									"type": "file",
+									"src": "BID2.csv"
+								},
+								{
+									"key": "compliance-reason",
+									"value": "This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testingThis is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testingThis is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testingThis is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testingThis is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testingThis is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testingThis is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testingThis is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testingThis is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testingThis is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testingThis is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testingThis is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testingThis is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testingThis is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testingThis is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testingThis is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testingThis is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testingThis is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testingThis is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing This is testing",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "POST Request with emb-gen-compliance-reason = Y",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_post_default();\r",
+									"stp_test_post_status_success_as_0();\r",
+									"stp_test_post_schema_without_errors();\r",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:8080/esb-stp/rest/v1/participant/orders/upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"description": "",
+									"key": "order-type",
+									"type": "text",
+									"value": "BID"
+								},
+								{
+									"description": "",
+									"key": "filename",
+									"type": "file",
+									"src": "BID2.csv"
+								},
+								{
+									"key": "emb-gen-compliance-reason",
+									"value": "The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is testing.The reason is simple since this is since this is testing.The reason is simple since this is since this is testing.The reason is simple since this isince this is testing.The reason is simple since this is simple",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3. BID",
+			"description": "This folder relates all test cases for offer type BID only.",
+			"item": [
+				{
+					"name": "POST request for Order Type = BID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_post_default();\r",
+									"stp_test_post_schema_without_errors();"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}\\upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"description": "",
+									"key": "order-type",
+									"type": "text",
+									"value": "BID"
+								},
+								{
+									"description": "",
+									"key": "filename",
+									"type": "file",
+									"src": "BID2.csv"
+								},
+								{
+									"key": "discard-qty",
+									"value": "Y",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"description": "This is a happy flow sanity test for POST request.\n--It contains valid file.\n--It contains valid Username and Token\n--It contains valid headers (order-type)\n\nExpected Output \n--Pass all the results as mentioned in test"
+					},
+					"response": []
+				},
+				{
+					"name": "GET request for Order Type = BID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_get_default();\r",
+									"stp_test_get_schema_without_errors();"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/{{tmp_upload_id}}",
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": "This test does a positive testing of GET request for STP"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "4. OFFERS",
+			"description": "",
+			"item": [
+				{
+					"name": "POST request for Order Type = OFFER",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_post_default();\r",
+									"stp_test_post_schema_without_errors();\r",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}\\upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"description": "",
+									"key": "order-type",
+									"type": "text",
+									"value": "OFFER"
+								},
+								{
+									"description": "",
+									"key": "filename",
+									"type": "file",
+									"src": "OFFER.csv"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET request for Order Type = OFFER",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_get_default();\r",
+									"stp_test_get_schema_without_errors();"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/{{tmp_upload_id}}",
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": "This test does a positive testing of GET request for STP"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "5. RESERVE BIDS",
+			"description": "This suite does a sanity test to verify data uploaed for Reserve Bids (PCMP)",
+			"item": [
+				{
+					"name": "POST request for Order Type = Reserve Bid(PCMP)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_post_default();\r",
+									"stp_test_post_schema_without_errors();\r",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}\\upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"description": "",
+									"key": "order-type",
+									"type": "text",
+									"value": "PCMP"
+								},
+								{
+									"description": "",
+									"key": "filename",
+									"type": "file",
+									"src": "Reserve_Bids.csv"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET request for Order Type = Reserve Bid(PCMP)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_get_default();\r",
+									"stp_test_get_schema_without_errors();"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/{{tmp_upload_id}}",
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": "This test does a positive testing of GET request for STP"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "6. RESERVE OFFERS",
+			"description": "",
+			"item": [
+				{
+					"name": "POST request for Order Type = Reserve Offers(GCMP)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_post_default();\r",
+									"stp_test_post_schema_without_errors();\r",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}\\upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"description": "",
+									"key": "order-type",
+									"type": "text",
+									"value": "GCMP"
+								},
+								{
+									"description": "",
+									"key": "filename",
+									"type": "file",
+									"src": "Reserve_Offer.csv"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET request for Order Type = Reserve Offer(GCMP)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_get_default();\r",
+									"stp_test_get_schema_without_errors();"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/{{tmp_upload_id}}",
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "7. FK",
+			"description": "",
+			"item": [
+				{
+					"name": "POST request for Order Type = FK",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_post_default();\r",
+									"stp_test_post_schema_without_errors();\r",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}\\upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"description": "",
+									"key": "order-type",
+									"type": "text",
+									"value": "FK"
+								},
+								{
+									"description": "",
+									"key": "filename",
+									"type": "file",
+									"src": "FK.csv"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET request for Order Type = FK",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_get_default();\r",
+									"stp_test_get_schema_without_errors();"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/{{tmp_upload_id}}",
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "8. DIFFERENCE BIDS",
+			"description": "",
+			"item": [
+				{
+					"name": "POST request for Order Type = Difference Bids",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_post_default();\r",
+									"stp_test_post_schema_without_errors();\r",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}\\upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"description": "",
+									"key": "order-type",
+									"type": "text",
+									"value": "DIFFBID"
+								},
+								{
+									"description": "",
+									"key": "filename",
+									"type": "file",
+									"src": "DIFFBID.csv"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET request for Order Type = Difference Bids",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_get_default();\r",
+									"stp_test_get_schema_without_errors();"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/{{tmp_upload_id}}",
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "9. Nominated DCLS Bids",
+			"description": "",
+			"item": [
+				{
+					"name": "POST request for Order Type = Nominated DCLS Bid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_post_default();\r",
+									"stp_test_post_schema_without_errors();\r",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}\\upload",
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"description": "",
+									"key": "order-type",
+									"type": "text",
+									"value": "DCLSBID"
+								},
+								{
+									"description": "",
+									"key": "filename",
+									"type": "file",
+									"src": "DCLSBID.csv"
+								},
+								{
+									"key": "discard-file",
+									"value": "Y",
+									"description": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "GET request for Order Type = Nominated DCLS Bid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"eval(globals.stp_default_tests);\r",
+									"\r",
+									"stp_test_get_default();\r",
+									"stp_test_get_schema_without_errors();"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/{{tmp_upload_id}}",
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-Username",
+								"value": "phil.calder@nzx.com",
+								"description": ""
+							},
+							{
+								"key": "X-API-Token",
+								"value": "testing",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
